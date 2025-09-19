@@ -1,0 +1,14 @@
+{
+	"name": "mumps-pattern-match",
+	"main": "lib/index.js",
+	"scripts": {
+		"build": "tsc --noEmit && esbuild src/index.ts --bundle --outfile=lib/index.js"
+	},
+	"bin": {
+		"hello-world-npm": "./bin.js"
+	},
+	"devDependencies": {
+		"esbuild": "^0.25.10",
+		"typescript": "^5.9.2"
+	}
+}

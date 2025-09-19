@@ -1,0 +1,13 @@
+{
+	"include": ["src"],
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"strict": true,
+		"esModuleInterop": true,
+
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "lib"
+	}
+}

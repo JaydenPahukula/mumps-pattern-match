@@ -1,5 +1,4 @@
-export declare function match(string: string, pattern: string): Promise<boolean>;
-
-export class PatternSyntaxError extends Error {
-	constructor(position: number, message?: string);
-}
+import { compile } from "./functions/compile.js";
+import { exec } from "./functions/exec.js";
+declare function match(str: string, pattern: string): boolean;
+export { compile, exec, match };

@@ -12,9 +12,9 @@ import perl_pm from "./perl_pm";
 //     return perl_pm ((char*) string, pcre_pattern, 0,svPtr);
 // }
 
-export default function pm(string: string, pattern: string): boolean {
+export default async function pm(string: string, pattern: string): Promise<boolean> {
 	const p = new_parser(new_scanner(pattern));
 	const pcre_pattern = parse(p);
 
-	return perl_pm(string, pattern);
+	return perl_pm(string, pcre_pattern);
 }

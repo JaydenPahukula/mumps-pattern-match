@@ -3,14 +3,16 @@
 	"main": "lib/index.js",
 	"scripts": {
 		"build": "npm run typecheck && npm run build:js",
-		"typecheck": "tsc --noEmit",
-		"build:js": "esbuild src/index.ts --outfile=lib/index.js --platform=node --bundle"
+		"typecheck": "tsc --noEmit ./src/**/*",
+		"build:js": "esbuild src/index.ts --outfile=lib/index.js --platform=node --bundle",
+		"test": "ts-node test/run.ts"
 	},
 	"bin": {
 		"hello-world-npm": "./bin.js"
 	},
 	"devDependencies": {
 		"esbuild": "^0.25.10",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.9.2"
 	},
 	"dependencies": {

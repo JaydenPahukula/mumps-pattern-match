@@ -4,8 +4,7 @@
 	"scripts": {
 		"build": "npm run typecheck && npm run build:js",
 		"typecheck": "tsc --noEmit ./src/**/*",
-		"build:js": "esbuild src/index.ts --outfile=lib/index.js --platform=node --bundle",
-		"test": "ts-node test/run.ts"
+		"build:js": "esbuild src/index.ts --outfile=lib/index.js --platform=node --bundle"
 	},
 	"bin": {
 		"hello-world-npm": "./bin.js"

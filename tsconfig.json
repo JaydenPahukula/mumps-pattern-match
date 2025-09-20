@@ -2,12 +2,9 @@
 	"include": ["src"],
 	"compilerOptions": {
 		"target": "ES2022",
-		"module": "ESNext",
+		"module": "nodenext",
 		"strict": true,
 		"esModuleInterop": true,
-
-		"declaration": true,
-		"emitDeclarationOnly": true,
-		"outDir": "lib"
+		"moduleResolution": "nodenext"
 	}
 }

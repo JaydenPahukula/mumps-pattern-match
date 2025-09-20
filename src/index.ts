@@ -1,5 +1,3 @@
-type idkidk = string;
+export { default as match } from "./functions/pm";
 
-export function test() {
-	return "Hello world";
-}
+export { default as PatternSyntaxError } from "./errors/patternsyntaxerror";

@@ -1,4 +1,4 @@
-import { compile } from "./functions/compile.js";
-import { exec } from "./functions/exec.js";
-declare function match(str: string, pattern: string): boolean;
-export { compile, exec, match };
+export { match } from "./match.js";
+export { Pattern } from "./pattern.js";
+export * from "./ast/asttypes.js";
+export * from "./nfa/nfatypes.js";

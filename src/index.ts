@@ -1,8 +1,5 @@
-import { compile } from "./functions/compile.js";
-import { exec } from "./functions/exec.js";
+export { match } from "./match.js";
+export { Pattern } from "./pattern.js";
 
-function match(str: string, pattern: string): boolean {
-	return exec(str, compile(pattern));
-}
-
-export { compile, exec, match };
+export * from "./ast/asttypes.js"; // AST types
+export * from "./nfa/nfatypes.js"; // NFA types

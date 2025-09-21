@@ -1,3 +1,3 @@
-import { Parser } from "../../classes/parser.js";
 import { AST } from "../../types/ast.js";
-export declare function parse(p: Parser): AST;
+/** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
+export declare function parse(pattern: string): AST;

@@ -13,11 +13,11 @@ interface BaseNode {
 export interface ASTAtomNode extends BaseNode {
     type: ASTNodeType.Atom;
     count: ASTCountNode;
-    element: ASTPatCodeNode | ASTLiteralNode | ASTAlternationNode;
+    element: ASTElementNode;
 }
 export interface ASTCountNode extends BaseNode {
     type: ASTNodeType.Count;
-    count: number | [number | undefined, number | undefined];
+    count: [number | undefined, number | undefined];
 }
 export interface ASTPatCodeNode extends BaseNode {
     type: ASTNodeType.PatCode;
@@ -32,6 +32,5 @@ export interface ASTAlternationNode extends BaseNode {
     atoms: ASTAtomNode[];
 }
 export type ASTElementNode = ASTPatCodeNode | ASTLiteralNode | ASTAlternationNode;
-export type ASTNode = ASTAtomNode | ASTCountNode | ASTPatCodeNode | ASTLiteralNode | ASTAlternationNode;
 export type AST = ASTAtomNode[];
 export {};

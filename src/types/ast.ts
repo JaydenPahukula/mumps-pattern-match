@@ -20,7 +20,7 @@ export interface ASTAtomNode extends BaseNode {
 
 export interface ASTCountNode extends BaseNode {
 	type: ASTNodeType.Count;
-	count: number | [number | undefined, number | undefined];
+	count: [number | undefined, number | undefined];
 }
 
 export interface ASTPatCodeNode extends BaseNode {

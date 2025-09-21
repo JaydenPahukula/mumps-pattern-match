@@ -1,4 +1,4 @@
-import { Parser } from "../classes/parser.js";
+import { build } from "./builders/build.js";
 import { CompiledPattern } from "../types/compiledpattern.js";
 import { parse } from "./parsers/parse.js";
 
@@ -7,5 +7,6 @@ export function compile(pattern: string): CompiledPattern {
 	return {
 		text: pattern,
 		ast: ast,
+		nfa: build(ast),
 	};
 }

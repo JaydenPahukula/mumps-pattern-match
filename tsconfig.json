@@ -1,7 +1,6 @@
 {
 	"include": ["src"],
 	"compilerOptions": {
-		"baseUrl": "./src",
 		"outDir": "./lib",
 
 		"target": "es2022",

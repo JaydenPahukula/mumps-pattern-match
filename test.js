@@ -1,5 +1,5 @@
 import { compile } from "./lib/index.js";
 
-const pattern = '.E1A2(1"a",2EAP)';
+const pattern = "3.5N";
 
-console.dir(compile(pattern), { depth: 100 });
+console.dir(compile(pattern).nfa, { depth: 100 });

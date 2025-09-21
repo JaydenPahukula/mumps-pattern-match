@@ -5,7 +5,7 @@ import { ASTCountNode, ASTNodeType } from "../../types/ast.js";
 export function parseCount(p: Parser): ASTCountNode {
 	const startIndex = p.currIndex;
 	const digits: string[] = [];
-	let count: number | [number | undefined, number | undefined];
+	let count: [number | undefined, number | undefined];
 	while (isDigit(p.currChar)) {
 		digits.push(p.currChar);
 		p.increment();
@@ -20,7 +20,8 @@ export function parseCount(p: Parser): ASTCountNode {
 		count = [digitsToNum(digits), digitsToNum(digits2)];
 	} else {
 		if (digits.length === 0) throw new PatternSyntaxError(startIndex, "Expected a repitition count");
-		count = digitsToNum(digits) ?? -1; // should never happen
+		const x = digitsToNum(digits);
+		count = [x, x];
 	}
 	return {
 		type: ASTNodeType.Count,

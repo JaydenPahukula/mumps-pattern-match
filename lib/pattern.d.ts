@@ -1,5 +1,5 @@
-import { AST } from "./ast/asttypes.js";
-import { NFA } from "./nfa/nfatypes.js";
+import { AST } from "./ast/types.js";
+import { NFA } from "./nfa/types.js";
 /** A compiled pattern. Run `.exec("...")` to match a string against this pattern. */
 export declare class Pattern {
     #private;

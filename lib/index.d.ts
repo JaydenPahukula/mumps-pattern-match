@@ -1,4 +1,6 @@
-export { match } from "./match.js";
-export { Pattern } from "./pattern.js";
-export * from "./ast/asttypes.js";
-export * from "./nfa/nfatypes.js";
+import { Pattern } from "./pattern.js";
+/** Tests if `str` matches `pattern`. */
+declare function match(str: string, pattern: string): boolean;
+export { Pattern, match };
+export * from "./ast/types.js";
+export * from "./nfa/types.js";

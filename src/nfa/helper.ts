@@ -1,4 +1,4 @@
-import { NFANode } from "./nfatypes.js";
+import { NFANode } from "./types.js";
 
 export class NFAHelper {
 	private _num = 0;

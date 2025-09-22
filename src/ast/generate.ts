@@ -1,4 +1,4 @@
-import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType } from "./asttypes.js";
+import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType } from "./types.js";
 import { PatternSyntaxError } from "../errors/patternsyntaxerror.js";
 import { ParseHelper } from "./parsehelper.js";
 

@@ -1,6 +1,6 @@
-import { AST, PatternAtom, ASTNodeType } from "../ast/asttypes.js";
-import { NFA, NFANode } from "./nfatypes.js";
-import { NFAHelper } from "./nfahelper.js";
+import { AST, PatternAtom, ASTNodeType } from "../ast/types.js";
+import { NFA, NFANode } from "./types.js";
+import { NFAHelper } from "./helper.js";
 
 export function generateNFA(tree: AST): NFA {
 	const nfa = new NFAHelper();

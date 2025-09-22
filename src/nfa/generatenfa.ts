@@ -1,4 +1,4 @@
-import { AST, ASTAtomNode, ASTNodeType } from "../ast/asttypes.js";
+import { AST, PatternAtom, ASTNodeType } from "../ast/asttypes.js";
 import { NFA, NFANode } from "./nfatypes.js";
 import { NFAHelper } from "./nfahelper.js";
 
@@ -13,7 +13,7 @@ export function generateNFA(tree: AST): NFA {
 	return startNode;
 }
 
-function buildAtom(startNode: NFANode, atom: ASTAtomNode, nfa: NFAHelper): NFANode {
+function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANode {
 	// define fn to create new node based on pattern element
 	let attachNewNode: ((node: NFANode) => NFANode) | undefined = undefined;
 	if (atom.element.type === ASTNodeType.Literal) {

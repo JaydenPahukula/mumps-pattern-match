@@ -1,18 +1,18 @@
-import { AST, ASTAtomNode, ASTCountNode, ASTElementNode, ASTNodeType } from "./asttypes.js";
+import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType } from "./asttypes.js";
 import { PatternSyntaxError } from "../errors/patternsyntaxerror.js";
 import { ParseHelper } from "./parsehelper.js";
 
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export function generateAST(pattern: string): AST {
 	const p = new ParseHelper(pattern);
-	const atoms: ASTAtomNode[] = [];
+	const atoms: PatternAtom[] = [];
 	while (!p.isDone()) {
 		atoms.push(parseAtom(p));
 	}
 	return atoms;
 }
 
-function parseAtom(p: ParseHelper): ASTAtomNode {
+function parseAtom(p: ParseHelper): PatternAtom {
 	const startIndex = p.currIndex();
 	return {
 		type: ASTNodeType.Atom,
@@ -23,7 +23,7 @@ function parseAtom(p: ParseHelper): ASTAtomNode {
 	};
 }
 
-function parseCount(p: ParseHelper): ASTCountNode {
+function parseCount(p: ParseHelper): RepCount {
 	const startIndex = p.currIndex();
 	const digits1: string[] = [];
 	let count: [number | undefined, number | undefined];
@@ -52,7 +52,7 @@ function parseCount(p: ParseHelper): ASTCountNode {
 	};
 }
 
-function parseElement(p: ParseHelper): ASTElementNode {
+function parseElement(p: ParseHelper): PatternElement {
 	const startIndex = p.currIndex();
 	switch (p.currChar()) {
 		case '"':
@@ -74,7 +74,7 @@ function parseElement(p: ParseHelper): ASTElementNode {
 		case "(":
 			// alternation
 			p.increment();
-			const atoms: ASTAtomNode[] = [parseAtom(p)];
+			const atoms: PatternAtom[] = [parseAtom(p)];
 			while (true) {
 				if ((p.currChar() as string) === ",") {
 					p.increment();

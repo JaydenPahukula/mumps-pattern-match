@@ -6,39 +6,39 @@ export const enum ASTNodeType {
 	Alternation,
 }
 
-interface BaseNode {
+interface ASTNode {
 	type: ASTNodeType;
 	pos: number;
 	len: number;
 }
 
-export interface ASTAtomNode extends BaseNode {
+export interface PatternAtom extends ASTNode {
 	type: ASTNodeType.Atom;
-	count: ASTCountNode;
-	element: ASTElementNode;
+	count: RepCount;
+	element: PatternElement;
 }
 
-export interface ASTCountNode extends BaseNode {
+export interface RepCount extends ASTNode {
 	type: ASTNodeType.Count;
 	count: [number | undefined, number | undefined];
 }
 
-export interface ASTPatCodeNode extends BaseNode {
+export interface PatternCode extends ASTNode {
 	type: ASTNodeType.PatCode;
 	code: string;
 }
 
-export interface ASTLiteralNode extends BaseNode {
+export interface StrLit extends ASTNode {
 	type: ASTNodeType.Literal;
 	string: string;
 }
 
-export interface ASTAlternationNode extends BaseNode {
+export interface Alternation extends ASTNode {
 	type: ASTNodeType.Alternation;
-	atoms: ASTAtomNode[];
+	atoms: PatternAtom[];
 }
 
-export type ASTElementNode = ASTPatCodeNode | ASTLiteralNode | ASTAlternationNode;
+export type PatternElement = PatternCode | StrLit | Alternation;
 
 // The abstract syntax tree of a pattern is a list of pattern atoms
-export type AST = ASTAtomNode[];
+export type AST = PatternAtom[];

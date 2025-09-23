@@ -1,23 +1,28 @@
 import { AST, PatternAtom, ASTNodeType, PatternGroup } from "../ast/types.js";
 import { NFA, NFANode } from "./types.js";
-import { NFAHelper } from "./helper.js";
 
 export function generateNFA(tree: AST): NFA {
-	const nfa = new NFAHelper();
-	const startNode = nfa.newNode();
-	const endNode = buildPatternGroup(startNode, tree, nfa);
+	let nodeIndex = 0;
+	const mkNode = () => ({
+		id: nodeIndex++,
+		isEnd: false,
+		children: {},
+		eChildren: [],
+	});
+	const startNode = mkNode();
+	const endNode = buildPatternGroup(startNode, tree, mkNode);
 	endNode.isEnd = true;
 	return startNode;
 }
 
-function buildPatternGroup(startNode: NFANode, patternGroup: PatternGroup, nfa: NFAHelper): NFANode {
+function buildPatternGroup(startNode: NFANode, patternGroup: PatternGroup, mkNode: () => NFANode): NFANode {
 	for (const atom of patternGroup.atoms) {
-		startNode = buildAtom(startNode, atom, nfa);
+		startNode = buildAtom(startNode, atom, mkNode);
 	}
 	return startNode;
 }
 
-function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANode {
+function buildAtom(startNode: NFANode, atom: PatternAtom, mkNode: () => NFANode): NFANode {
 	// define fn to create new node based on pattern element
 	let attachNewNode: ((node: NFANode) => NFANode) | undefined = undefined;
 	if (atom.element.type === ASTNodeType.Literal) {
@@ -25,7 +30,7 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANo
 		attachNewNode = (node) => {
 			// path graph structure
 			for (const char of strLit) {
-				const newNode = nfa.newNode();
+				const newNode = mkNode();
 				node.children[char] = newNode;
 				node = newNode;
 			}
@@ -34,7 +39,7 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANo
 	} else if (atom.element.type === ASTNodeType.PatCode) {
 		const code = atom.element.code;
 		attachNewNode = (node) => {
-			const newNode = nfa.newNode();
+			const newNode = mkNode();
 			// multiple edges to newNode
 			for (const char of getMatchString(code)) {
 				node.children[char] = newNode;
@@ -44,11 +49,11 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANo
 	} else if (atom.element.type === ASTNodeType.Alternation) {
 		const patterns = atom.element.patterns;
 		attachNewNode = (node) => {
-			const endNode = nfa.newNode();
+			const endNode = mkNode();
 			patterns.forEach((patternGroup) => {
-				let newNode = nfa.newNode();
+				let newNode = mkNode();
 				node.eChildren.push(newNode);
-				newNode = buildPatternGroup(newNode, patternGroup, nfa);
+				newNode = buildPatternGroup(newNode, patternGroup, mkNode);
 				newNode.eChildren.push(endNode);
 			});
 			return endNode;
@@ -64,7 +69,7 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANo
 	for (let i = 0; i < lowerBound; i++) {
 		currNode = attachNewNode(currNode);
 	}
-	const endNode = nfa.newNode();
+	const endNode = mkNode();
 	if (upperBound === undefined) {
 		const newNode = attachNewNode(currNode);
 		newNode.eChildren.push(currNode);

@@ -3,10 +3,14 @@
 	"main": "lib/index.js",
 	"type": "module",
 	"scripts": {
-		"build": "rimraf ./lib && tsc"
+		"build": "rimraf ./lib && tsc",
+		"test": "ts-node ./test/run.ts"
 	},
 	"devDependencies": {
 		"rimraf": "^6.0.1",
 		"typescript": "^5.9.2"
+	},
+	"dependencies": {
+		"ts-node": "^10.9.2"
 	}
 }

@@ -1,15 +1,21 @@
 export const enum ASTNodeType {
-	Atom,
-	Count,
-	PatCode,
-	Literal,
-	Alternation,
+	Group = "group", // list of atoms
+	Atom = "atom",
+	RepCount = "count",
+	PatCode = "patcode",
+	Literal = "strlit",
+	Alternation = "alternation",
 }
 
 interface ASTNode {
 	type: ASTNodeType;
 	pos: number;
 	len: number;
+}
+
+export interface PatternGroup extends ASTNode {
+	type: ASTNodeType.Group;
+	atoms: PatternAtom[];
 }
 
 export interface PatternAtom extends ASTNode {
@@ -19,7 +25,7 @@ export interface PatternAtom extends ASTNode {
 }
 
 export interface RepCount extends ASTNode {
-	type: ASTNodeType.Count;
+	type: ASTNodeType.RepCount;
 	count: [number | undefined, number | undefined];
 }
 
@@ -35,10 +41,9 @@ export interface StrLit extends ASTNode {
 
 export interface Alternation extends ASTNode {
 	type: ASTNodeType.Alternation;
-	atoms: PatternAtom[];
+	patterns: PatternGroup[];
 }
 
 export type PatternElement = PatternCode | StrLit | Alternation;
 
-// The abstract syntax tree of a pattern is a list of pattern atoms
-export type AST = PatternAtom[];
+export type AST = PatternGroup;

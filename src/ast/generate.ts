@@ -1,15 +1,21 @@
-import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType } from "./types.js";
+import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType, PatternGroup } from "./types.js";
 import { PatternSyntaxError } from "../errors/patternsyntaxerror.js";
 import { ParseHelper } from "./parsehelper.js";
 
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export function generateAST(pattern: string): AST {
 	const p = new ParseHelper(pattern);
+	const startIndex = p.currIndex();
 	const atoms: PatternAtom[] = [];
 	while (!p.isDone()) {
 		atoms.push(parseAtom(p));
 	}
-	return atoms;
+	return {
+		type: ASTNodeType.Group,
+		pos: startIndex,
+		len: p.currIndex() - startIndex,
+		atoms: atoms,
+	};
 }
 
 function parseAtom(p: ParseHelper): PatternAtom {
@@ -45,7 +51,7 @@ function parseCount(p: ParseHelper): RepCount {
 		count = [x, x];
 	}
 	return {
-		type: ASTNodeType.Count,
+		type: ASTNodeType.RepCount,
 		count: count,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
@@ -74,20 +80,39 @@ function parseElement(p: ParseHelper): PatternElement {
 		case "(":
 			// alternation
 			p.increment();
-			const atoms: PatternAtom[] = [parseAtom(p)];
-			while (true) {
-				if ((p.currChar() as string) === ",") {
+			const groups: PatternGroup[] = [];
+			let atoms: PatternAtom[] = [];
+			let groupStartIndex = p.currIndex();
+			while (1) {
+				if (p.currChar() === ")") break;
+				else if (p.currChar() === ",") {
+					// complete the pattern group
+					groups.push({
+						type: ASTNodeType.Group,
+						pos: groupStartIndex,
+						len: p.currIndex() - groupStartIndex,
+						atoms: atoms, // TODO: can atoms be empty here?
+					});
+					atoms = [];
+					groupStartIndex = p.currIndex();
 					p.increment();
+				} else {
 					atoms.push(parseAtom(p));
-				} else if ((p.currChar() as string) === ")") break;
-				else throw new PatternSyntaxError(p.currIndex(), "Expected ',' or ')'");
+				}
 			}
+			// complete the last pattern group
+			groups.push({
+				type: ASTNodeType.Group,
+				pos: groupStartIndex,
+				len: p.currIndex() - groupStartIndex,
+				atoms: atoms, // TODO: can atoms be empty here?
+			});
 			p.increment();
 			return {
 				type: ASTNodeType.Alternation,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
-				atoms: atoms,
+				patterns: groups,
 			};
 		default:
 			// pattern code

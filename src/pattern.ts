@@ -1,7 +1,8 @@
 import { AST } from "./ast/types.js";
 import { generateAST } from "./ast/generate.js";
-import { generateNFA } from "./nfa/nfa.js";
+import { generateNFA } from "./nfa/generate.js";
 import { NFA } from "./nfa/types.js";
+import { execNFA } from "./nfa/exec.js";
 
 /** A compiled pattern. Run `.exec("...")` to match a string against this pattern. */
 export class Pattern {
@@ -20,8 +21,7 @@ export class Pattern {
 	}
 
 	public exec(str: string): boolean {
-		// TODO
-		return true;
+		return execNFA(this.nfa, str);
 	}
 }
 

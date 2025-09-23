@@ -1,14 +1,19 @@
 export declare const enum ASTNodeType {
-    Atom = 0,
-    Count = 1,
-    PatCode = 2,
-    Literal = 3,
-    Alternation = 4
+    Group = "group",// list of atoms
+    Atom = "atom",
+    RepCount = "count",
+    PatCode = "patcode",
+    Literal = "strlit",
+    Alternation = "alternation"
 }
 interface ASTNode {
     type: ASTNodeType;
     pos: number;
     len: number;
+}
+export interface PatternGroup extends ASTNode {
+    type: ASTNodeType.Group;
+    atoms: PatternAtom[];
 }
 export interface PatternAtom extends ASTNode {
     type: ASTNodeType.Atom;
@@ -16,7 +21,7 @@ export interface PatternAtom extends ASTNode {
     element: PatternElement;
 }
 export interface RepCount extends ASTNode {
-    type: ASTNodeType.Count;
+    type: ASTNodeType.RepCount;
     count: [number | undefined, number | undefined];
 }
 export interface PatternCode extends ASTNode {
@@ -29,8 +34,8 @@ export interface StrLit extends ASTNode {
 }
 export interface Alternation extends ASTNode {
     type: ASTNodeType.Alternation;
-    atoms: PatternAtom[];
+    patterns: PatternGroup[];
 }
 export type PatternElement = PatternCode | StrLit | Alternation;
-export type AST = PatternAtom[];
+export type AST = PatternGroup;
 export {};

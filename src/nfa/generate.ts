@@ -1,15 +1,19 @@
-import { AST, PatternAtom, ASTNodeType } from "../ast/types.js";
+import { AST, PatternAtom, ASTNodeType, PatternGroup } from "../ast/types.js";
 import { NFA, NFANode } from "./types.js";
 import { NFAHelper } from "./helper.js";
 
 export function generateNFA(tree: AST): NFA {
 	const nfa = new NFAHelper();
 	const startNode = nfa.newNode();
-	let currNode = startNode;
-	for (const atom of tree) {
-		currNode = buildAtom(currNode, atom, nfa);
+	const endNode = buildPatternGroup(startNode, tree, nfa);
+	endNode.isEnd = true;
+	return startNode;
+}
+
+function buildPatternGroup(startNode: NFANode, patternGroup: PatternGroup, nfa: NFAHelper): NFANode {
+	for (const atom of patternGroup.atoms) {
+		startNode = buildAtom(startNode, atom, nfa);
 	}
-	currNode.isEnd = true;
 	return startNode;
 }
 
@@ -17,27 +21,34 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, nfa: NFAHelper): NFANo
 	// define fn to create new node based on pattern element
 	let attachNewNode: ((node: NFANode) => NFANode) | undefined = undefined;
 	if (atom.element.type === ASTNodeType.Literal) {
-		const s = atom.element.string;
+		const strLit = atom.element.string;
 		attachNewNode = (node) => {
-			const newNode = nfa.newNode();
-			node.children[s] = newNode;
-			return newNode;
+			// path graph structure
+			for (const char of strLit) {
+				const newNode = nfa.newNode();
+				node.children[char] = newNode;
+				node = newNode;
+			}
+			return node;
 		};
 	} else if (atom.element.type === ASTNodeType.PatCode) {
 		const code = atom.element.code;
 		attachNewNode = (node) => {
 			const newNode = nfa.newNode();
-			node.children[getMatchString(code)] = newNode;
+			// multiple edges to newNode
+			for (const char of getMatchString(code)) {
+				node.children[char] = newNode;
+			}
 			return newNode;
 		};
 	} else if (atom.element.type === ASTNodeType.Alternation) {
-		const atoms = atom.element.atoms;
+		const patterns = atom.element.patterns;
 		attachNewNode = (node) => {
 			const endNode = nfa.newNode();
-			atoms.forEach((atom) => {
+			patterns.forEach((patternGroup) => {
 				let newNode = nfa.newNode();
 				node.eChildren.push(newNode);
-				newNode = buildAtom(newNode, atom, nfa);
+				newNode = buildPatternGroup(newNode, patternGroup, nfa);
 				newNode.eChildren.push(endNode);
 			});
 			return endNode;

@@ -5,7 +5,10 @@ export function execNFA(nfa: NFANode, str: string): boolean {
 	for (const c of str) {
 		const newQ: NFANode[] = [];
 		for (const currNode of q) {
-			const child = currNode.children[c];
+			let child = currNode.children[c];
+			if (child !== undefined) newQ.push(child);
+			// check patcode E
+			child = currNode.children[""];
 			if (child !== undefined) newQ.push(child);
 		}
 		q = traverseEpsilonTransitions([...new Set(newQ)]);

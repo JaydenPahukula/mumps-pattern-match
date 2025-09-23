@@ -38,14 +38,19 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, mkNode: () => NFANode)
 		};
 	} else if (atom.element.type === ASTNodeType.PatCode) {
 		const code = atom.element.code;
-		attachNewNode = (node) => {
-			const newNode = mkNode();
-			// multiple edges to newNode
-			for (const char of getMatchString(code)) {
-				node.children[char] = newNode;
-			}
-			return newNode;
-		};
+		if (code.includes("E")) {
+			attachNewNode = (node) => {
+				return (node.children[""] = mkNode()); // special case
+			};
+		} else {
+			const match = getMatchString(code);
+			attachNewNode = (node) => {
+				const newNode = mkNode();
+				// multiple edges to newNode
+				for (const char of match) node.children[char] = newNode;
+				return newNode;
+			};
+		}
 	} else if (atom.element.type === ASTNodeType.Alternation) {
 		const patterns = atom.element.patterns;
 		attachNewNode = (node) => {
@@ -88,7 +93,6 @@ function buildAtom(startNode: NFANode, atom: PatternAtom, mkNode: () => NFANode)
 /** Gets a string with all chars that match any of the pattern codes */
 function getMatchString(codes: string): string {
 	codes = codes.toUpperCase();
-	if (codes.includes("E")) return ""; // "" means everything
 	let s = new Set<string>();
 	for (const code of codes) {
 		if (code === "A") s = union(s, patCodeASet);
@@ -97,6 +101,9 @@ function getMatchString(codes: string): string {
 		if (code === "C") s = union(s, patCodeCSet);
 		if (code === "N") s = union(s, patCodeNSet);
 		if (code === "P") s = union(s, patCodePSet);
+		else {
+			// bad
+		}
 	}
 	return Array.from(s).join("");
 }

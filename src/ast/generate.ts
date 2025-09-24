@@ -51,7 +51,7 @@ function parseCount(p: ParseHelper): ASTRepCountNode {
 		}
 		count = [digitsToNum(digits1), digitsToNum(digits2)];
 	} else {
-		if (digits1.length === 0) throw new PatternSyntaxError(startIndex, "Expected a repitition count");
+		if (digits1.length === 0) throw new PatternSyntaxError("Expected a repitition count", startIndex);
 		const x = digitsToNum(digits1);
 		count = [x, x];
 	}
@@ -74,7 +74,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				chars.push(p.currChar());
 				p.increment();
 			}
-			if (p.isDone()) throw new PatternSyntaxError(startIndex, "Unmatched parenthesis");
+			if (p.isDone()) throw new PatternSyntaxError("Expected '\"'", startIndex);
 			p.increment();
 			return {
 				type: ASTNodeType.StrLit,
@@ -85,7 +85,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 		case "(":
 			// alternation
 			p.increment();
-			if (p.currChar() === ")") throw new PatternSyntaxError(p.currIndex(), "Cannot have an empty alternation");
+			if (p.currChar() === ")") throw new PatternSyntaxError("Cannot have an empty alternation", p.currIndex());
 			const groups: ASTPatGroupNode[] = [parseGroup(p, [",", ")"])];
 			while (1) {
 				if (p.currChar() === ")") break;
@@ -93,7 +93,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 					p.increment();
 					groups.push(parseGroup(p, [",", ")"]));
 				} else {
-					throw new PatternSyntaxError(p.currIndex(), "Expected ',' or ')'");
+					throw new PatternSyntaxError("Expected ',' or ')'", p.currIndex());
 				}
 			}
 			p.increment();
@@ -110,7 +110,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				patCodes.push(p.currChar());
 				p.increment();
 			}
-			if (patCodes.length === 0) throw new PatternSyntaxError(p.currIndex());
+			if (patCodes.length === 0) throw new PatternSyntaxError("Expected a valid pattern code", p.currIndex());
 			return {
 				type: ASTNodeType.PatCode,
 				pos: startIndex,

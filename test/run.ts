@@ -36,9 +36,6 @@ const TESTS: [string, string, boolean][] = [
 	["0123456789", "5.15N", true],
 	["0123456789", "0.100N", true],
 	// alternation
-	["", "1()", true],
-	["", "1()", true],
-	["x", "1()", false],
 	["x", '1(1"x")', true],
 	["x", '1(2"x")', false],
 	["x", '2(1"x")', false],

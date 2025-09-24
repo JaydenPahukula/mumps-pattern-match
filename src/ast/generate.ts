@@ -5,9 +5,14 @@ import { ParseHelper } from "./parsehelper.js";
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export function generateAST(pattern: string): AST {
 	const p = new ParseHelper(pattern);
+	return parseGroup(p);
+}
+
+function parseGroup(p: ParseHelper, stopChars: string[] = []): PatternGroup {
 	const startIndex = p.currIndex();
 	const atoms: PatternAtom[] = [];
-	while (!p.isDone()) {
+	// stop reading atoms if any char in stopChars is encountered
+	while (!p.isDone() && !stopChars.includes(p.currChar())) {
 		atoms.push(parseAtom(p));
 	}
 	return {
@@ -80,33 +85,17 @@ function parseElement(p: ParseHelper): PatternElement {
 		case "(":
 			// alternation
 			p.increment();
-			const groups: PatternGroup[] = [];
-			let atoms: PatternAtom[] = [];
-			let groupStartIndex = p.currIndex();
+			if (p.currChar() === ")") throw new PatternSyntaxError(p.currIndex(), "Cannot have an empty alternation");
+			const groups: PatternGroup[] = [parseGroup(p, [",", ")"])];
 			while (1) {
 				if (p.currChar() === ")") break;
 				else if (p.currChar() === ",") {
-					// complete the pattern group
-					groups.push({
-						type: ASTNodeType.Group,
-						pos: groupStartIndex,
-						len: p.currIndex() - groupStartIndex,
-						atoms: atoms, // TODO: can atoms be empty here?
-					});
-					atoms = [];
-					groupStartIndex = p.currIndex();
 					p.increment();
+					groups.push(parseGroup(p, [",", ")"]));
 				} else {
-					atoms.push(parseAtom(p));
+					throw new PatternSyntaxError(p.currIndex(), "Expected ',' or ')'");
 				}
 			}
-			// complete the last pattern group
-			groups.push({
-				type: ASTNodeType.Group,
-				pos: groupStartIndex,
-				len: p.currIndex() - groupStartIndex,
-				atoms: atoms, // TODO: can atoms be empty here?
-			});
 			p.increment();
 			return {
 				type: ASTNodeType.Alternation,

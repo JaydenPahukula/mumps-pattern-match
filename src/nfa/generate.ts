@@ -1,4 +1,4 @@
-import { AST, PatternAtom, ASTNodeType, PatternGroup } from "../ast/types.js";
+import { AST, ASTPatAtomNode, ASTNodeType, ASTPatGroupNode } from "../ast/types.js";
 import { NFA, NFANode } from "./types.js";
 
 export function generateNFA(tree: AST): NFA {
@@ -15,17 +15,17 @@ export function generateNFA(tree: AST): NFA {
 	return startNode;
 }
 
-function buildPatternGroup(startNode: NFANode, patternGroup: PatternGroup, mkNode: () => NFANode): NFANode {
+function buildPatternGroup(startNode: NFANode, patternGroup: ASTPatGroupNode, mkNode: () => NFANode): NFANode {
 	for (const atom of patternGroup.atoms) {
 		startNode = buildAtom(startNode, atom, mkNode);
 	}
 	return startNode;
 }
 
-function buildAtom(startNode: NFANode, atom: PatternAtom, mkNode: () => NFANode): NFANode {
+function buildAtom(startNode: NFANode, atom: ASTPatAtomNode, mkNode: () => NFANode): NFANode {
 	// define fn to create new node based on pattern element
 	let attachNewNode: ((node: NFANode) => NFANode) | undefined = undefined;
-	if (atom.element.type === ASTNodeType.Literal) {
+	if (atom.element.type === ASTNodeType.StrLit) {
 		const strLit = atom.element.string;
 		attachNewNode = (node) => {
 			// path graph structure

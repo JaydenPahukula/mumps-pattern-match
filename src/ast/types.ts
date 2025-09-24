@@ -1,9 +1,9 @@
 export const enum ASTNodeType {
-	Group = "group", // list of atoms
-	Atom = "atom",
-	RepCount = "count",
+	PatGroup = "patgroup",
+	PatAtom = "patatom",
+	RepCount = "repcount",
 	PatCode = "patcode",
-	Literal = "strlit",
+	StrLit = "strlit",
 	Alternation = "alternation",
 }
 
@@ -13,37 +13,37 @@ interface ASTNode {
 	len: number;
 }
 
-export interface PatternGroup extends ASTNode {
-	type: ASTNodeType.Group;
-	atoms: PatternAtom[];
+export interface ASTPatGroupNode extends ASTNode {
+	type: ASTNodeType.PatGroup;
+	atoms: ASTPatAtomNode[];
 }
 
-export interface PatternAtom extends ASTNode {
-	type: ASTNodeType.Atom;
-	count: RepCount;
-	element: PatternElement;
+export interface ASTPatAtomNode extends ASTNode {
+	type: ASTNodeType.PatAtom;
+	count: ASTRepCountNode;
+	element: ASTPatElementNode;
 }
 
-export interface RepCount extends ASTNode {
+export interface ASTRepCountNode extends ASTNode {
 	type: ASTNodeType.RepCount;
 	count: [number | undefined, number | undefined];
 }
 
-export interface PatternCode extends ASTNode {
+export interface ASTPatCodeNode extends ASTNode {
 	type: ASTNodeType.PatCode;
 	code: string;
 }
 
-export interface StrLit extends ASTNode {
-	type: ASTNodeType.Literal;
+export interface ASTStrLitNode extends ASTNode {
+	type: ASTNodeType.StrLit;
 	string: string;
 }
 
-export interface Alternation extends ASTNode {
+export interface ASTAlternationNode extends ASTNode {
 	type: ASTNodeType.Alternation;
-	patterns: PatternGroup[];
+	patterns: ASTPatGroupNode[];
 }
 
-export type PatternElement = PatternCode | StrLit | Alternation;
+export type ASTPatElementNode = ASTPatCodeNode | ASTStrLitNode | ASTAlternationNode;
 
-export type AST = PatternGroup;
+export type AST = ASTPatGroupNode;

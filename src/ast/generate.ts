@@ -1,4 +1,4 @@
-import { AST, PatternAtom, RepCount, PatternElement, ASTNodeType, PatternGroup } from "./types.js";
+import { AST, ASTPatAtomNode, ASTRepCountNode, ASTPatElementNode, ASTNodeType, ASTPatGroupNode } from "./types.js";
 import { PatternSyntaxError } from "../errors/patternsyntaxerror.js";
 import { ParseHelper } from "./parsehelper.js";
 
@@ -8,25 +8,25 @@ export function generateAST(pattern: string): AST {
 	return parseGroup(p);
 }
 
-function parseGroup(p: ParseHelper, stopChars: string[] = []): PatternGroup {
+function parseGroup(p: ParseHelper, stopChars: string[] = []): ASTPatGroupNode {
 	const startIndex = p.currIndex();
-	const atoms: PatternAtom[] = [];
+	const atoms: ASTPatAtomNode[] = [];
 	// stop reading atoms if any char in stopChars is encountered
 	while (!p.isDone() && !stopChars.includes(p.currChar())) {
 		atoms.push(parseAtom(p));
 	}
 	return {
-		type: ASTNodeType.Group,
+		type: ASTNodeType.PatGroup,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
 		atoms: atoms,
 	};
 }
 
-function parseAtom(p: ParseHelper): PatternAtom {
+function parseAtom(p: ParseHelper): ASTPatAtomNode {
 	const startIndex = p.currIndex();
 	return {
-		type: ASTNodeType.Atom,
+		type: ASTNodeType.PatAtom,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
 		count: parseCount(p),
@@ -34,7 +34,7 @@ function parseAtom(p: ParseHelper): PatternAtom {
 	};
 }
 
-function parseCount(p: ParseHelper): RepCount {
+function parseCount(p: ParseHelper): ASTRepCountNode {
 	const startIndex = p.currIndex();
 	const digits1: string[] = [];
 	let count: [number | undefined, number | undefined];
@@ -63,7 +63,7 @@ function parseCount(p: ParseHelper): RepCount {
 	};
 }
 
-function parseElement(p: ParseHelper): PatternElement {
+function parseElement(p: ParseHelper): ASTPatElementNode {
 	const startIndex = p.currIndex();
 	switch (p.currChar()) {
 		case '"':
@@ -77,7 +77,7 @@ function parseElement(p: ParseHelper): PatternElement {
 			if (p.isDone()) throw new PatternSyntaxError(startIndex, "Unmatched parenthesis");
 			p.increment();
 			return {
-				type: ASTNodeType.Literal,
+				type: ASTNodeType.StrLit,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
 				string: chars.join(""),
@@ -86,7 +86,7 @@ function parseElement(p: ParseHelper): PatternElement {
 			// alternation
 			p.increment();
 			if (p.currChar() === ")") throw new PatternSyntaxError(p.currIndex(), "Cannot have an empty alternation");
-			const groups: PatternGroup[] = [parseGroup(p, [",", ")"])];
+			const groups: ASTPatGroupNode[] = [parseGroup(p, [",", ")"])];
 			while (1) {
 				if (p.currChar() === ")") break;
 				else if (p.currChar() === ",") {

@@ -1,4 +1,4 @@
-import { AST } from "./types.js";
+import { AST } from './types.js';
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export declare function generateAST(pattern: string): AST;
 export declare function digitsToNum(digits: string[]): number | undefined;

@@ -1,5 +1,5 @@
-import { AST, ASTPatAtomNode, ASTNodeType, ASTPatGroupNode } from "../ast/types.js";
-import { NFA, NFANode } from "./types.js";
+import { AST, ASTPatAtomNode, ASTNodeType, ASTPatGroupNode } from '../ast/types.js';
+import { NFA, NFANode } from './types.js';
 
 export function generateNFA(tree: AST): NFA {
 	let nodeIndex = 0;
@@ -38,9 +38,9 @@ function buildAtom(startNode: NFANode, atom: ASTPatAtomNode, mkNode: () => NFANo
 		};
 	} else if (atom.element.type === ASTNodeType.PatCode) {
 		const code = atom.element.code;
-		if (code.includes("E")) {
+		if (code.includes('E')) {
 			attachNewNode = (node) => {
-				return (node.children[""] = mkNode()); // special case
+				return (node.children[''] = mkNode()); // special case
 			};
 		} else {
 			const match = getMatchString(code);
@@ -100,15 +100,15 @@ function getMatchString(codes: string): string {
 			for (const c of matchStr) resultSet.add(c);
 		}
 	}
-	return Array.from(resultSet).join("");
+	return Array.from(resultSet).join('');
 }
 
 export const PATCODES: { [key: string]: string | null } = {
-	A: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	C: "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x7F",
+	A: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+	C: '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x7F',
 	E: null, // special case, matches everything
-	L: "abcdefghijklmnopqrstuvwxyz",
-	N: "0123456789",
-	P: " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
-	U: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	L: 'abcdefghijklmnopqrstuvwxyz',
+	N: '0123456789',
+	P: ' !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~',
+	U: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 };

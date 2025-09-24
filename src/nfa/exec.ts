@@ -1,4 +1,4 @@
-import { NFANode } from "./types.js";
+import { NFANode } from './types.js';
 
 export function execNFA(nfa: NFANode, str: string): boolean {
 	let q = traverseEpsilonTransitions([nfa]);
@@ -8,7 +8,7 @@ export function execNFA(nfa: NFANode, str: string): boolean {
 			let child = currNode.children[c];
 			if (child !== undefined) newQ.push(child);
 			// check patcode E
-			child = currNode.children[""];
+			child = currNode.children[''];
 			if (child !== undefined) newQ.push(child);
 		}
 		q = traverseEpsilonTransitions([...new Set(newQ)]);

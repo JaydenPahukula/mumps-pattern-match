@@ -1,10 +1,10 @@
 export const enum ASTNodeType {
-	PatGroup = "patgroup",
-	PatAtom = "patatom",
-	RepCount = "repcount",
-	PatCode = "patcode",
-	StrLit = "strlit",
-	Alternation = "alternation",
+	PatGroup = 'patgroup',
+	PatAtom = 'patatom',
+	RepCount = 'repcount',
+	PatCode = 'patcode',
+	StrLit = 'strlit',
+	Alternation = 'alternation',
 }
 
 interface ASTNode {

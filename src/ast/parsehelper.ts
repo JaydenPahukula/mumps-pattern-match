@@ -7,7 +7,7 @@ export class ParseHelper {
 	}
 
 	public currChar() {
-		return this._input.at(this._index) ?? "";
+		return this._input.at(this._index) ?? '';
 	}
 
 	public currIndex() {

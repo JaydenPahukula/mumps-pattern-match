@@ -1,8 +1,8 @@
-import { AST } from "./ast/types.js";
-import { generateAST } from "./ast/generate.js";
-import { generateNFA } from "./nfa/generate.js";
-import { NFA } from "./nfa/types.js";
-import { execNFA } from "./nfa/exec.js";
+import { AST } from './ast/types.js';
+import { generateAST } from './ast/generate.js';
+import { generateNFA } from './nfa/generate.js';
+import { NFA } from './nfa/types.js';
+import { execNFA } from './nfa/exec.js';
 
 /** A compiled pattern. Run `.exec("...")` to match a string against this pattern. */
 export class Pattern {
@@ -28,7 +28,7 @@ export class Pattern {
 function deepFreeze<T extends object>(obj: T): T {
 	Object.freeze(obj);
 	for (const value of Object.values(obj)) {
-		if (value && typeof value === "object" && !Object.isFrozen(value)) {
+		if (value && typeof value === 'object' && !Object.isFrozen(value)) {
 			deepFreeze(value);
 		}
 	}

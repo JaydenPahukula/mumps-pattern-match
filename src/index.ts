@@ -1,4 +1,4 @@
-import { Pattern } from "./pattern.js";
+import { Pattern } from './pattern.js';
 
 /** Tests if `str` matches `pattern`. */
 function match(str: string, pattern: string): boolean {
@@ -8,5 +8,5 @@ function match(str: string, pattern: string): boolean {
 export { Pattern, match };
 
 // types
-export * from "./ast/types.js"; // AST types
-export * from "./nfa/types.js"; // NFA types
+export * from './ast/types.js'; // AST types
+export * from './nfa/types.js'; // NFA types

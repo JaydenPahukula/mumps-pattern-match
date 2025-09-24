@@ -4,13 +4,25 @@
 	"type": "module",
 	"scripts": {
 		"build": "rimraf ./lib && tsc",
-		"test": "ts-node ./test/run.ts"
+		"test": "ts-node ./test/run.ts",
+		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"prettier": "^3.6.2",
 		"rimraf": "^6.0.1",
 		"typescript": "^5.9.2"
 	},
 	"dependencies": {
 		"ts-node": "^10.9.2"
+	},
+	"prettier": {
+		"printWidth": 120,
+		"useTabs": true,
+		"semi": true,
+		"singleQuote": true,
+		"trailingComma": "all",
+		"bracketSpacing": true,
+		"arrowParens": "always",
+		"endOfLine": "lf"
 	}
 }

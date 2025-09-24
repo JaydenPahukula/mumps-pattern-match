@@ -1,6 +1,6 @@
-import { AST, ASTPatAtomNode, ASTRepCountNode, ASTPatElementNode, ASTNodeType, ASTPatGroupNode } from "./types.js";
-import { PatternSyntaxError } from "../errors/patternsyntaxerror.js";
-import { ParseHelper } from "./parsehelper.js";
+import { AST, ASTPatAtomNode, ASTRepCountNode, ASTPatElementNode, ASTNodeType, ASTPatGroupNode } from './types.js';
+import { PatternSyntaxError } from '../errors/patternsyntaxerror.js';
+import { ParseHelper } from './parsehelper.js';
 
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export function generateAST(pattern: string): AST {
@@ -42,7 +42,7 @@ function parseCount(p: ParseHelper): ASTRepCountNode {
 		digits1.push(p.currChar());
 		p.increment();
 	}
-	if (p.currChar() === ".") {
+	if (p.currChar() === '.') {
 		p.increment();
 		const digits2: string[] = [];
 		while (isDigit(p.currChar())) {
@@ -51,7 +51,7 @@ function parseCount(p: ParseHelper): ASTRepCountNode {
 		}
 		count = [digitsToNum(digits1), digitsToNum(digits2)];
 	} else {
-		if (digits1.length === 0) throw new PatternSyntaxError("Expected a repitition count", startIndex);
+		if (digits1.length === 0) throw new PatternSyntaxError('Expected a repitition count', startIndex);
 		const x = digitsToNum(digits1);
 		count = [x, x];
 	}
@@ -80,18 +80,18 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				type: ASTNodeType.StrLit,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
-				string: chars.join(""),
+				string: chars.join(''),
 			};
-		case "(":
+		case '(':
 			// alternation
 			p.increment();
-			if (p.currChar() === ")") throw new PatternSyntaxError("Cannot have an empty alternation", p.currIndex());
-			const groups: ASTPatGroupNode[] = [parseGroup(p, [",", ")"])];
+			if (p.currChar() === ')') throw new PatternSyntaxError('Cannot have an empty alternation', p.currIndex());
+			const groups: ASTPatGroupNode[] = [parseGroup(p, [',', ')'])];
 			while (1) {
-				if (p.currChar() === ")") break;
-				else if (p.currChar() === ",") {
+				if (p.currChar() === ')') break;
+				else if (p.currChar() === ',') {
 					p.increment();
-					groups.push(parseGroup(p, [",", ")"]));
+					groups.push(parseGroup(p, [',', ')']));
 				} else {
 					throw new PatternSyntaxError("Expected ',' or ')'", p.currIndex());
 				}
@@ -110,37 +110,37 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				patCodes.push(p.currChar());
 				p.increment();
 			}
-			if (patCodes.length === 0) throw new PatternSyntaxError("Expected a valid pattern code", p.currIndex());
+			if (patCodes.length === 0) throw new PatternSyntaxError('Expected a valid pattern code', p.currIndex());
 			return {
 				type: ASTNodeType.PatCode,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
-				code: patCodes.join(""),
+				code: patCodes.join(''),
 			};
 	}
 }
 
 export function digitsToNum(digits: string[]): number | undefined {
-	const num = parseInt(digits.join(""));
+	const num = parseInt(digits.join(''));
 	if (isNaN(num)) return undefined;
 	return num;
 }
 
 export function isDigit(s: unknown) {
 	return (
-		s === "0" ||
-		s === "1" ||
-		s === "2" ||
-		s === "3" ||
-		s === "4" ||
-		s === "5" ||
-		s === "6" ||
-		s === "7" ||
-		s === "8" ||
-		s === "9"
+		s === '0' ||
+		s === '1' ||
+		s === '2' ||
+		s === '3' ||
+		s === '4' ||
+		s === '5' ||
+		s === '6' ||
+		s === '7' ||
+		s === '8' ||
+		s === '9'
 	);
 }
 
 export function isPatternCode(s: string) {
-	return s === "A" || s === "C" || s === "E" || s === "L" || s === "N" || s === "P" || s === "U";
+	return s === 'A' || s === 'C' || s === 'E' || s === 'L' || s === 'N' || s === 'P' || s === 'U';
 }

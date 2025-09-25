@@ -19,6 +19,7 @@ function parseGroup(p: ParseHelper, stopChars: string[] = []): ASTPatGroupNode {
 		type: ASTNodeType.PatGroup,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
+		str: p.str.slice(startIndex, p.currIndex()),
 		atoms: atoms,
 	};
 }
@@ -29,6 +30,7 @@ function parseAtom(p: ParseHelper): ASTPatAtomNode {
 		type: ASTNodeType.PatAtom,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
+		str: p.str.slice(startIndex, p.currIndex()),
 		count: parseCount(p),
 		element: parseElement(p),
 	};
@@ -60,6 +62,7 @@ function parseCount(p: ParseHelper): ASTRepCountNode {
 		count: count,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
+		str: p.str.slice(startIndex, p.currIndex()),
 	};
 }
 
@@ -81,6 +84,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
 				string: chars.join(''),
+				str: p.str.slice(startIndex, p.currIndex()),
 			};
 		case '(':
 			// alternation
@@ -101,6 +105,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				type: ASTNodeType.Alternation,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
+				str: p.str.slice(startIndex, p.currIndex()),
 				patterns: groups,
 			};
 		default:
@@ -115,6 +120,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 				type: ASTNodeType.PatCode,
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
+				str: p.str.slice(startIndex, p.currIndex()),
 				code: patCodes.join(''),
 			};
 	}

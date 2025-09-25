@@ -6,6 +6,10 @@ export class ParseHelper {
 		this._input = input;
 	}
 
+	public get str() {
+		return this._input;
+	}
+
 	public currChar() {
 		return this._input.at(this._index) ?? '';
 	}

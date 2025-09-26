@@ -15,15 +15,15 @@ console.log(match('World!', '1U.A')); // false
 
 The two match calls in the previous example are equivalent to the M expressions `"Hello"?1U.A` and `"World!"?1U.A`, respectively.
 
-If you plan on reusing a pattern, you can compile it once and execute it many times, like this:
+If you plan on reusing a pattern, you can compile it once then match it many times, like this:
 
 ```ts
 import { Pattern } from 'mumps-pattern-match';
 
 const pat = new Pattern('1U.A');
 
-console.log(pat.exec('Hello')); // true
-console.log(pat.exec('World!')); // false
+console.log(pat.match('Hello')); // true
+console.log(pat.match('World!')); // false
 ```
 
 This is more efficient, since compiling the pattern takes more work than executing it. Learn more in the [Performance](#performance) section.

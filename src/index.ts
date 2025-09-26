@@ -2,7 +2,7 @@ import { Pattern } from './pattern.js';
 
 /** Tests if `str` matches `pattern`. */
 function match(str: string, pattern: string): boolean {
-	return new Pattern(pattern).exec(str);
+	return new Pattern(pattern).match(str);
 }
 
 export { Pattern, match };

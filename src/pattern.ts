@@ -4,7 +4,6 @@ import { generateNFA } from './nfa/generate.js';
 import { NFA } from './nfa/types.js';
 import { execNFA } from './nfa/exec.js';
 
-/** A compiled pattern. Run `.exec("...")` to match a string against this pattern. */
 export class Pattern {
 	#str: string;
 	ast: AST;
@@ -20,7 +19,7 @@ export class Pattern {
 		return this.#str;
 	}
 
-	public exec(str: string): boolean {
+	public match(str: string): boolean {
 		return execNFA(this.nfa, str);
 	}
 }

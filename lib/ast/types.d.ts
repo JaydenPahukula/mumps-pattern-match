@@ -1,11 +1,4 @@
-export declare const enum ASTNodeType {
-    PatGroup = "patgroup",
-    PatAtom = "patatom",
-    RepCount = "repcount",
-    PatCode = "patcode",
-    StrLit = "strlit",
-    Alternation = "alternation"
-}
+export type ASTNodeType = 'patgroup' | 'patatom' | 'repcount' | 'patcode' | 'strlit' | 'alternation';
 export interface ASTBaseNode {
     type: ASTNodeType;
     pos: number;
@@ -13,28 +6,28 @@ export interface ASTBaseNode {
     str: string;
 }
 export interface ASTPatGroupNode extends ASTBaseNode {
-    type: ASTNodeType.PatGroup;
+    type: 'patgroup';
     atoms: ASTPatAtomNode[];
 }
 export interface ASTPatAtomNode extends ASTBaseNode {
-    type: ASTNodeType.PatAtom;
+    type: 'patatom';
     count: ASTRepCountNode;
     element: ASTPatElementNode;
 }
 export interface ASTRepCountNode extends ASTBaseNode {
-    type: ASTNodeType.RepCount;
+    type: 'repcount';
     count: [number | undefined, number | undefined];
 }
 export interface ASTPatCodeNode extends ASTBaseNode {
-    type: ASTNodeType.PatCode;
+    type: 'patcode';
     code: string;
 }
 export interface ASTStrLitNode extends ASTBaseNode {
-    type: ASTNodeType.StrLit;
+    type: 'strlit';
     string: string;
 }
 export interface ASTAlternationNode extends ASTBaseNode {
-    type: ASTNodeType.Alternation;
+    type: 'alternation';
     patterns: ASTPatGroupNode[];
 }
 export type ASTPatElementNode = ASTPatCodeNode | ASTStrLitNode | ASTAlternationNode;

@@ -16,7 +16,7 @@ function parseGroup(p: ParseHelper, stopChars: string[] = []): ASTPatGroupNode {
 		atoms.push(parseAtom(p));
 	}
 	return {
-		type: ASTNodeType.PatGroup,
+		type: 'patgroup',
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
 		str: p.str.slice(startIndex, p.currIndex()),
@@ -27,7 +27,7 @@ function parseGroup(p: ParseHelper, stopChars: string[] = []): ASTPatGroupNode {
 function parseAtom(p: ParseHelper): ASTPatAtomNode {
 	const startIndex = p.currIndex();
 	return {
-		type: ASTNodeType.PatAtom,
+		type: 'patatom',
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
 		str: p.str.slice(startIndex, p.currIndex()),
@@ -58,7 +58,7 @@ function parseCount(p: ParseHelper): ASTRepCountNode {
 		count = [x, x];
 	}
 	return {
-		type: ASTNodeType.RepCount,
+		type: 'repcount',
 		count: count,
 		pos: startIndex,
 		len: p.currIndex() - startIndex,
@@ -80,7 +80,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 			if (p.isDone()) throw new PatternSyntaxError("Expected '\"'", startIndex);
 			p.increment();
 			return {
-				type: ASTNodeType.StrLit,
+				type: 'strlit',
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
 				string: chars.join(''),
@@ -102,7 +102,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 			}
 			p.increment();
 			return {
-				type: ASTNodeType.Alternation,
+				type: 'alternation',
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
 				str: p.str.slice(startIndex, p.currIndex()),
@@ -117,7 +117,7 @@ function parseElement(p: ParseHelper): ASTPatElementNode {
 			}
 			if (patCodes.length === 0) throw new PatternSyntaxError('Expected a valid pattern code', p.currIndex());
 			return {
-				type: ASTNodeType.PatCode,
+				type: 'patcode',
 				pos: startIndex,
 				len: p.currIndex() - startIndex,
 				str: p.str.slice(startIndex, p.currIndex()),

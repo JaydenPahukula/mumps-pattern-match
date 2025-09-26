@@ -25,7 +25,7 @@ function buildPatternGroup(startNode: NFANode, patternGroup: ASTPatGroupNode, mk
 function buildAtom(startNode: NFANode, atom: ASTPatAtomNode, mkNode: () => NFANode): NFANode {
 	// define fn to create new node based on pattern element
 	let attachNewNode: ((node: NFANode) => NFANode) | undefined = undefined;
-	if (atom.element.type === ASTNodeType.StrLit) {
+	if (atom.element.type === 'strlit') {
 		const strLit = atom.element.string;
 		attachNewNode = (node) => {
 			// path graph structure
@@ -36,7 +36,7 @@ function buildAtom(startNode: NFANode, atom: ASTPatAtomNode, mkNode: () => NFANo
 			}
 			return node;
 		};
-	} else if (atom.element.type === ASTNodeType.PatCode) {
+	} else if (atom.element.type === 'patcode') {
 		const code = atom.element.code;
 		if (code.includes('E')) {
 			attachNewNode = (node) => {
@@ -51,7 +51,7 @@ function buildAtom(startNode: NFANode, atom: ASTPatAtomNode, mkNode: () => NFANo
 				return newNode;
 			};
 		}
-	} else if (atom.element.type === ASTNodeType.Alternation) {
+	} else if (atom.element.type === 'alternation') {
 		const patterns = atom.element.patterns;
 		attachNewNode = (node) => {
 			const endNode = mkNode();

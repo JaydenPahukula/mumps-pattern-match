@@ -7,6 +7,7 @@ function match(str: string, pattern: string): boolean {
 
 export { Pattern, match };
 
-// types
+export { PatternSyntaxError } from './errors/patternsyntaxerror.js';
+
 export * from './ast/types.js'; // AST types
 export * from './nfa/types.js'; // NFA types

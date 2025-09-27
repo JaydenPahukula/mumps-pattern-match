@@ -1,6 +1,22 @@
 import { AST, ASTPatAtomNode, ASTRepCountNode, ASTPatElementNode, ASTNodeType, ASTPatGroupNode } from './types.js';
 import { PatternSyntaxError } from '../errors/patternsyntaxerror.js';
-import { ParseHelper } from './parsehelper.js';
+
+export class ParseHelper {
+	public _index = 0;
+	constructor(public readonly str: string) {}
+	public currChar() {
+		return this.str.at(this._index) ?? '';
+	}
+	public currIndex() {
+		return this._index;
+	}
+	public isDone() {
+		return this._index >= this.str.length;
+	}
+	public increment() {
+		if (!this.isDone()) this._index++;
+	}
+}
 
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export function generateAST(pattern: string): AST {

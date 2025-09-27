@@ -1,4 +1,13 @@
 import { AST } from './types.js';
+export declare class ParseHelper {
+    readonly str: string;
+    _index: number;
+    constructor(str: string);
+    currChar(): string;
+    currIndex(): number;
+    isDone(): boolean;
+    increment(): void;
+}
 /** Generates the AST of the pattern, or throws a `PatternSyntaxError` */
 export declare function generateAST(pattern: string): AST;
 export declare function digitsToNum(digits: string[]): number | undefined;

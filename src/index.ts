@@ -1,3 +1,3 @@
-export { default as match } from "./functions/pm";
+export { pm as match } from "./functions/pm";
 
-export { default as PatternSyntaxError } from "./errors/patternsyntaxerror";
+export { PatternSyntaxError } from "./errors/patternsyntaxerror";

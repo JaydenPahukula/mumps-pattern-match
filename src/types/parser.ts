@@ -1,7 +1,7 @@
-import Scanner from "./scanner";
-import Token from "./token";
+import { Scanner } from "./scanner";
+import { Token } from "./token";
 
-export default interface Parser {
-	current_token: Token;
-	s: Scanner;
+export interface Parser {
+    current_token: Token;
+    s: Scanner;
 }

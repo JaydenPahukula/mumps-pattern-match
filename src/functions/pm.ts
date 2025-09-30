@@ -1,29 +1,19 @@
 import { PatternSyntaxError } from '../errors/patternsyntaxerror.js';
-import { pcre } from '../pcre/pcre.js';
 import { Parser } from '../types/parser.js';
-import { Scanner } from '../types/scanner.js';
-import { Token } from '../types/token.js';
 import { TokenType } from '../types/tokentype.js';
+import { scan, Scanner } from './scan.js';
 
 export function pm(string: string, pattern: string): boolean {
-	const p = new_parser(new_scanner(pattern));
-	const pcre_pattern = parse(p);
-
-	return perl_pm(string, pattern);
-}
-
-function new_parser(s: Scanner): Parser {
-	return {
+	const p: Parser = {
 		current_token: {
 			kind: TokenType.Error,
 			text: '',
 		},
-		s: s,
+		s: new Scanner(pattern),
 	};
-}
-
-function new_scanner(input: string): Scanner {
-	return new Scanner(input);
+	const pcre_pattern = parse(p);
+	console.log(pcre_pattern);
+	return false;
 }
 
 function parse(p: Parser): string {
@@ -131,12 +121,6 @@ function parse_pattern_atom_list(p: Parser) {
 	return result.join('|');
 }
 
-function perl_pm(string: string, pattern: string): boolean {
-	const regex = pcre.compile(pattern);
-	const matches = regex.exec(string, 0);
-	return matches?.length === 1 && matches[0]?.index === 0 && matches[0].length === string.length;
-}
-
 function leaning_toothpickize(unmangled: string): string {
 	let result: string[] = [];
 	for (const c of unmangled) {
@@ -147,87 +131,6 @@ function leaning_toothpickize(unmangled: string): string {
 		}
 	}
 	return result.join('');
-}
-
-function scan_token(s: Scanner): TokenType {
-	switch (toupper(s.current_char)) {
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			do {
-				take_char(s);
-			} while (isdigit(s.current_char));
-			return TokenType.Int;
-		case '"':
-			take_char(s);
-			while (s.current_char != '"') take_char(s);
-			take_char(s);
-			return TokenType.String;
-		case '(':
-			take_char(s);
-			return TokenType.LParen;
-		case ')':
-			take_char(s);
-			return TokenType.RParen;
-		case ',':
-			take_char(s);
-			return TokenType.Comma;
-		case '.':
-			take_char(s);
-			return TokenType.Dot;
-		case 'A':
-		case 'C':
-		case 'E':
-		case 'L':
-		case 'N':
-		case 'P':
-		case 'U':
-			take_char(s);
-			return TokenType.PatternCode;
-		case '\0':
-			return TokenType.EOT;
-		default:
-			console.error('SYNTAX ERROR TODO');
-			take_char(s);
-			return TokenType.Error;
-	}
-}
-
-function scan(s: Scanner): Token {
-	s.current_token.text = '';
-	s.current_token.kind = scan_token(s);
-	return s.current_token;
-}
-
-function take_char(s: Scanner) {
-	s.current_token.text += s.current_char;
-	s.increment();
-}
-
-function toupper(s: string): string {
-	return s.toUpperCase();
-}
-
-function isdigit(c: string): boolean {
-	return (
-		c === '0' ||
-		c === '1' ||
-		c === '2' ||
-		c === '3' ||
-		c === '4' ||
-		c === '5' ||
-		c === '6' ||
-		c === '7' ||
-		c === '8' ||
-		c === '9'
-	);
 }
 
 function ispunct(c: string): boolean {

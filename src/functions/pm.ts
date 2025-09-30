@@ -30,7 +30,7 @@ function parse(p: Parser): string {
 	p.current_token = scan(p.s);
 	const result = parse_pattern(p);
 	if (p.current_token.kind !== TokenType.EOT) {
-		throw new PatternSyntaxError(p.s.current_index);
+		throw new PatternSyntaxError('', p.s.current_index);
 	}
 	return result;
 }
@@ -113,11 +113,11 @@ function parse_pattern_element(p: Parser) {
 			accept_it(p);
 			result = '(' + parse_pattern_atom_list(p) + ')';
 			if ((p.current_token.kind as TokenType) !== TokenType.RParen)
-				throw new PatternSyntaxError(p.s.current_index, 'Expected closing parenthasis');
+				throw new PatternSyntaxError('Expected closing parenthasis', p.s.current_index);
 			accept_it(p);
 			break;
 		default:
-			throw new PatternSyntaxError(p.s.current_index);
+			throw new PatternSyntaxError('', p.s.current_index);
 	}
 	return result;
 }

@@ -1,5 +1,2 @@
-export declare function match(string: string, pattern: string): boolean;
-
-export class PatternSyntaxError extends Error {
-	constructor(position: number, message?: string);
-}
+export { pm as match } from './functions/pm.js';
+export { PatternSyntaxError } from './errors/patternsyntaxerror.js';

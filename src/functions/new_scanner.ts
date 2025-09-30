@@ -1,6 +1,6 @@
-import { Scanner } from "../types/scanner";
-import { TokenType } from "../types/tokentype";
+import { Scanner } from '../types/scanner.js';
+import { TokenType } from '../types/tokentype.js';
 
 export function new_scanner(input: string): Scanner {
-    return new Scanner(input);
+	return new Scanner(input);
 }

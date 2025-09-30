@@ -1,0 +1,1 @@
+{"version":3,"file":"patternsyntaxerror.js","sourceRoot":"","sources":["../../src/errors/patternsyntaxerror.ts"],"names":[],"mappings":"AAAA,MAAM,OAAO,kBAAmB,SAAQ,KAAK;IAC5C,YAAY,QAAgB,EAAE,OAAgB;QAC7C,KAAK,CAAC,uBAAuB,OAAO,IAAI,cAAc,WAAW,QAAQ,EAAE,CAAC,CAAC;QAC7E,IAAI,CAAC,IAAI,GAAG,oBAAoB,CAAC;IAClC,CAAC;CACD"}

@@ -1,6 +1,6 @@
-import { TokenType } from "./tokentype";
+import { TokenType } from './tokentype.js';
 
 export interface Token {
-    kind: TokenType;
-    text: string;
+	kind: TokenType;
+	text: string;
 }

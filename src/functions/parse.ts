@@ -45,6 +45,9 @@ function parse_count(p: Parser) {
 			accept_it(p);
 			result += lowerbound + ',';
 			if ((p.current_token.kind as TokenType) === TokenType.Int) {
+				const upperbound = p.current_token.text;
+				if (parseInt(lowerbound) > parseInt(upperbound))
+					throw new PatternSyntaxError('Lower bound cannot be higher than the upper bound', p.s.current_index); // TODO handle without throwing
 				result += p.current_token.text;
 				accept_it(p);
 			}

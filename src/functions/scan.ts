@@ -1,4 +1,19 @@
-import { Token, TokenType } from '../types/token.js';
+export const enum TokenType {
+	Int,
+	String,
+	LParen,
+	RParen,
+	Comma,
+	Dot,
+	PatternCode,
+	EOT,
+	Error,
+}
+
+export interface Token {
+	kind: TokenType;
+	text: string;
+}
 
 export class Scanner {
 	public current_index = 0;
@@ -24,7 +39,7 @@ export function scan(s: Scanner): Token {
 
 function scan_token(s: Scanner): TokenType {
 	if (s.current_char === null) return TokenType.EOT;
-	const c = s.current_char.toUpperCase();
+	const c = s.current_char;
 	if (is_digit(c)) {
 		do {
 			take_char(s);
@@ -78,5 +93,6 @@ function is_digit(c: string): boolean {
 }
 
 function is_patcode(c: string): boolean {
+	c = c.toUpperCase();
 	return c === 'A' || c === 'C' || c === 'E' || c === 'L' || c === 'N' || c === 'P' || c === 'U';
 }

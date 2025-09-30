@@ -1,22 +1,18 @@
-import { Token } from '../types/token.js';
-import { TokenType } from '../types/tokentype.js';
+import { Token, TokenType } from '../types/token.js';
 
 export class Scanner {
 	public current_index = 0;
-
-	public current_char: string;
+	public current_char: string | null;
 	public current_token: Token = {
 		kind: TokenType.Error,
 		text: '',
 	};
-
 	constructor(public input: string) {
-		this.current_char = input[0] ?? '\0';
+		this.current_char = input[0] ?? null;
 	}
-
 	public increment() {
 		this.current_index += 1;
-		this.current_char = this.input[this.current_index] ?? '\0';
+		this.current_char = this.input[this.current_index] ?? null;
 	}
 }
 
@@ -27,53 +23,37 @@ export function scan(s: Scanner): Token {
 }
 
 function scan_token(s: Scanner): TokenType {
-	switch (s.current_char.toUpperCase()) {
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			do {
-				take_char(s);
-			} while (isdigit(s.current_char));
-			return TokenType.Int;
-		case '"':
+	if (s.current_char === null) return TokenType.EOT;
+	const c = s.current_char.toUpperCase();
+	if (is_digit(c)) {
+		do {
 			take_char(s);
-			while (s.current_char != '"') take_char(s);
-			take_char(s);
-			return TokenType.String;
-		case '(':
-			take_char(s);
-			return TokenType.LParen;
-		case ')':
-			take_char(s);
-			return TokenType.RParen;
-		case ',':
-			take_char(s);
-			return TokenType.Comma;
-		case '.':
-			take_char(s);
-			return TokenType.Dot;
-		case 'A':
-		case 'C':
-		case 'E':
-		case 'L':
-		case 'N':
-		case 'P':
-		case 'U':
-			take_char(s);
-			return TokenType.PatternCode;
-		case '\0':
-			return TokenType.EOT;
-		default:
-			console.error('SYNTAX ERROR TODO');
-			take_char(s);
-			return TokenType.Error;
+		} while (is_digit(s.current_char));
+		return TokenType.Int;
+	} else if (c === '"') {
+		take_char(s);
+		while (s.current_char != '"') take_char(s); // TODO handle escaped double quote
+		take_char(s);
+		return TokenType.String;
+	} else if (c === '(') {
+		take_char(s);
+		return TokenType.LParen;
+	} else if (c === ')') {
+		take_char(s);
+		return TokenType.RParen;
+	} else if (c === ',') {
+		take_char(s);
+		return TokenType.Comma;
+	} else if (c === '.') {
+		take_char(s);
+		return TokenType.Dot;
+	} else if (is_patcode(c)) {
+		take_char(s);
+		return TokenType.PatternCode;
+	} else {
+		console.error('SYNTAX ERROR TODO');
+		take_char(s);
+		return TokenType.Error;
 	}
 }
 
@@ -82,7 +62,7 @@ function take_char(s: Scanner) {
 	s.increment();
 }
 
-function isdigit(c: string): boolean {
+function is_digit(c: string): boolean {
 	return (
 		c === '0' ||
 		c === '1' ||
@@ -95,4 +75,8 @@ function isdigit(c: string): boolean {
 		c === '8' ||
 		c === '9'
 	);
+}
+
+function is_patcode(c: string): boolean {
+	return c === 'A' || c === 'C' || c === 'E' || c === 'L' || c === 'N' || c === 'P' || c === 'U';
 }

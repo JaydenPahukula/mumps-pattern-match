@@ -1,6 +1,6 @@
 import { PatternSyntaxError } from '../errors/patternsyntaxerror.js';
 import { Parser } from '../types/parser.js';
-import { TokenType } from '../types/tokentype.js';
+import { TokenType } from '../types/token.js';
 import { scan, Scanner } from './scan.js';
 
 export function pm(string: string, pattern: string): boolean {

@@ -8,16 +8,22 @@ export interface Parser {
 }
 
 export function parse(input: string): string {
-	const s = new Scanner(input);
-	const p: Parser = {
-		current_token: scan(s),
-		s: s,
-	};
-	const result = parse_pattern(p);
-	if (p.current_token.kind !== TokenType.EOT) {
-		throw new PatternSyntaxError('Syntax error', p.s.current_index);
+	try {
+		const s = new Scanner(input);
+		const p: Parser = {
+			current_token: scan(s),
+			s: s,
+		};
+		const result = parse_pattern(p);
+		if (p.current_token.kind !== TokenType.EOT) {
+			throw new PatternSyntaxError('Syntax error', p.s.current_index);
+		}
+		return '^' + result + '$';
+	} catch (e) {
+		if (e === 'ALWAYSFALSE') {
+			return 'a^'; // never matches anything
+		} else throw e;
 	}
-	return '^' + result + '$';
 }
 
 function parse_pattern(p: Parser): string {
@@ -46,8 +52,10 @@ function parse_count(p: Parser) {
 			result += lowerbound + ',';
 			if ((p.current_token.kind as TokenType) === TokenType.Int) {
 				const upperbound = p.current_token.text;
-				if (parseInt(lowerbound) > parseInt(upperbound))
-					throw new PatternSyntaxError('Lower bound cannot be higher than the upper bound', p.s.current_index); // TODO handle without throwing
+				if (parseInt(lowerbound) > parseInt(upperbound)) {
+					// the pattern is unstatisfiable
+					throw 'ALWAYSFALSE';
+				}
 				result += p.current_token.text;
 				accept_it(p);
 			}

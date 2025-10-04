@@ -32,7 +32,7 @@ const TESTS: [string, string, boolean][] = [
 	['0123456789', '11.N', false],
 	['0123456789', '10.N', true],
 	['0123456789', '10.10N', true],
-	// ['0123456789', '9.8N', false], // TODO
+	['0123456789', '9.8N', false],
 	['0123456789', '5.15N', true],
 	['0123456789', '0.100N', true],
 	// alternation

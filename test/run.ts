@@ -20,6 +20,7 @@ const TESTS: [string, string, boolean][] = [
 	['hello', '1"Hello"', false],
 	['Hello', '1"hello"', false],
 	['hihihihihi', '5"hi"', true],
+	['hi"hi', '1"hi""hi"', true],
 	// repcounts
 	['', '0.E', true],
 	['', '1.E', false],
